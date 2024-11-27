@@ -3,68 +3,128 @@ local camera = workspace.CurrentCamera
 local ESPEnabled = true
 local useTeamCheck = true
 
-local players = game.Players
-local runService = game:GetService("RunService")
-local localPlayer = players.LocalPlayer
-local lines = {}
+if ESPEnabled then 
+for _,v in pairs(game.Players:GetPlayers()) do
+    if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
+        if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+            local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+            local Line = Drawing.new("Line")
+            Line.Visible = true
+            Line.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+            Line.To = Vector2.new(vector.X, vector.Y)
+            Line.Color = Color3.fromRGB(255, 80, 60)
+            Line.Thickness = 2
+            Line.Transparency = 1
 
--- Function to create or update ESP lines
-local function updateLine(player)
-    if not ESPEnabled then
-        if lines[player] then
-            lines[player].Visible = false
-        end
-        return
-    end
-
-    if player ~= localPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        local hrp = player.Character.HumanoidRootPart
-        local vector, onScreen = camera:WorldToScreenPoint(hrp.Position)
-        
-        -- Create a new line if it doesn't exist
-        if not lines[player] then
-            local line = Drawing.new("Line")
-            line.Color = Color3.fromRGB(255, 80, 60)
-            line.Thickness = 2
-            line.Transparency = 1
-            lines[player] = line
-        end
-        
-        local line = lines[player]
-        line.Visible = onScreen
-        if onScreen then
-            line.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
-            line.To = Vector2.new(vector.X, vector.Y)
-        end
-    elseif lines[player] then
-        lines[player].Visible = false
-    end
-end
-
--- Update ESP for all players
-local function updateAllPlayers()
-    for _, player in pairs(players:GetPlayers()) do
-        if not useTeamCheck or player.Team ~= localPlayer.Team then
-            updateLine(player)
+            function script()
+                game:GetService("RunService").RenderStepped:Connect(function(step)
+                    if ESPEnabled then
+                        if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
+                            if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                                local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+                                if onScreen == true then
+                                    Line.To = Vector2.new(vector.X, vector.Y)
+                                    Line.Visible = true
+                                else
+                                    Line.Visible = false
+                                end
+                            end
+                        end
+                    else
+                        Line.Visible = false
+                end)
+            end
+            coroutine.wrap(script)()
         end
     end
-end
+    v.CharacterAdded:Connect(function()
+        if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
+            repeat wait() until v.Character ~= nil
+            repeat wait() until v.Character:FindFirstChild("HumanoidRootPart") ~= nil
+            local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+            local Line = Drawing.new("Line")
+            Line.Visible = true
+            Line.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+            Line.To = Vector2.new(vector.X, vector.Y)
+            Line.Color = Color3.fromRGB(255, 80, 60)
+            Line.Thickness = 2
+            Line.Transparency = 1
 
--- Connect to RenderStepped for continuous updates
-runService.RenderStepped:Connect(updateAllPlayers)
-
--- Handle new players
-players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function()
-        repeat wait() until player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        updateLine(player)
+            function script()
+                game:GetService("RunService").RenderStepped:Connect(function(step)
+                    if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
+                        if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+                            if onScreen == true then
+                                Line.To = Vector2.new(vector.X, vector.Y)
+                                Line.Visible = true
+                            else
+                                Line.Visible = false
+                            end
+                        end
+                    end
+                end)
+            end
+            coroutine.wrap(script)()
+        end
     end)
-end)
+end
 
--- Clean up lines for players who leave
-players.PlayerRemoving:Connect(function(player)
-    if lines[player] then
-        lines[player]:Remove()
-        lines[player] = nil
+game.Players.PlayerAdded:Connect(function(v)
+    if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
+        if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+            local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+            local Line = Drawing.new("Line")
+            Line.Visible = true
+            Line.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+            Line.To = Vector2.new(vector.X, vector.Y)
+            Line.Color = Color3.fromRGB(255, 80, 60)
+            Line.Thickness = 2
+            Line.Transparency = 1
+
+            function script()
+                game:GetService("RunService").RenderStepped:Connect(function(step)
+                    if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                        local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+                        if onScreen == true then
+                         Line.To = Vector2.new(vector.X, vector.Y)
+                            Line.Visible = true
+                        else
+                            Line.Visible = false
+                        end
+                    end
+                end)
+            end
+            coroutine.wrap(script)()
+        end
     end
+    v.CharacterAdded:Connect(function()
+        if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
+            repeat wait() until v.Character ~= nil
+            repeat wait() until v.Character:FindFirstChild("HumanoidRootPart") ~= nil
+            local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+            local Line = Drawing.new("Line")
+            Line.Visible = true
+            Line.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+            Line.To = Vector2.new(vector.X, vector.Y)
+            Line.Color = Color3.fromRGB(255, 80, 60)
+            Line.Thickness = 2
+            Line.Transparency = 1 
+
+            function script()
+                game:GetService("RunService").RenderStepped:Connect(function(step)
+                    if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                        local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+                        if onScreen == true then
+                            Line.To = Vector2.new(vector.X, vector.Y)
+                            Line.Visible = true
+                        else
+                            Line.Visible = false
+                        end
+                    end
+                end)
+            end
+            coroutine.wrap(script)()
+        end
+    end)
 end)
