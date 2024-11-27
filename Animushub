@@ -3,8 +3,11 @@ local camera = workspace.CurrentCamera
 local ESPEnabled = true
 local useTeamCheck = true
 
-if ESPEnabled == false then
-    Line.Visible = false
+if ESPEnabled == true then
+    Line.Visible = true
+else
+    if ESPEnabled == false then
+        Line.Visible = false
 for _,v in pairs(game.Players:GetPlayers()) do
     if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
         if v ~= game.Players.LocalPlayer and v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
