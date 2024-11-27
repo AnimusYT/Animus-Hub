@@ -14,23 +14,22 @@ for _,v in pairs(game.Players:GetPlayers()) do
             Line.Thickness = 2
             Line.Transparency = 1
 
-                function script()
-                    game:GetService("RunService").RenderStepped:Connect(function(step)
-                        if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
-                            if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
-                                local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
-                                if onScreen == true then
-                                    Line.To = Vector2.new(vector.X, vector.Y)
-                                    Line.Visible = true
-                                else
-                                    Line.Visible = false
-                                end
+            function script()
+                game:GetService("RunService").RenderStepped:Connect(function(step)
+                    if useTeamCheck == false or v.Team ~= game.Players.LocalPlayer.Team then
+                        if v.Character ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                            local vector,onScreen = camera:WorldToScreenPoint(v.Character.HumanoidRootPart.Position)
+                            if onScreen == true then
+                                Line.To = Vector2.new(vector.X, vector.Y)
+                                Line.Visible = true
+                            else
+                                Line.Visible = false
                             end
                         end
-                    end)
-                end
-                coroutine.wrap(script)()
+                    end
+                end)
             end
+            coroutine.wrap(script)()
         end
     end
     v.CharacterAdded:Connect(function()
